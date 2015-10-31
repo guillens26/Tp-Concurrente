@@ -9,7 +9,8 @@ public class ConcurVector extends Thread{
 	private double[] elements;
 	private int threads;
 	private int load;
-	
+	private int recorrido;
+	private int dimension;
 	
 	/** Constructor for a ConcurVector.
 	 * @param size, the width of the vector.
@@ -22,20 +23,20 @@ public class ConcurVector extends Thread{
 	
 	
 	/** Returns the dimension of this vector, that is, its width. */
-	public int dimension() {
+	public synchronized  int dimension() {
 		return elements.length;
 	}
 	
-	public int getThreads(){
+	public synchronized int getThreads(){
 		return threads;
 	}
 	
-	public int getLoad() {
+	public synchronized  int getLoad() {
 		return load;
 	}
 
 
-	public void setLoad(int difElemnts) {
+	public synchronized  void setLoad(int difElemnts) {
 		this.load = difElemnts;
 	}
 	
@@ -43,7 +44,7 @@ public class ConcurVector extends Thread{
 	/** Returns the element at position i.
 	 * @param i, the position of the element to be returned.
 	 * @precondition 0 <= i < dimension(). */
-	public double get(int i) {
+	public synchronized  double get(int i) {
 		return elements[i];
 	}
 	
@@ -52,14 +53,14 @@ public class ConcurVector extends Thread{
 	 * @param i, the position to be set.
 	 * @param d, the value to assign at i.
 	 * @precondition 0 <= i < dimension. */
-	public void set(int i, double d) {
+	public synchronized  void set(int i, double d) {
 		elements[i] = d;
 	}
 	
 	
 	/** Assigns the value d to every position of this vector. 
 	 * @param d, the value to assigned. */
-	public void set(double d) {
+	public synchronized  void set(double d) {
 		for (int i = 0; i < dimension(); ++i)
 			elements[i] = d;
 	}
@@ -68,7 +69,7 @@ public class ConcurVector extends Thread{
 	/** Copies the values from another vector into this vector.
 	 * @param v, a vector from which values are to be copied.
 	 * @precondition dimension() == v.dimension(). */
-	public void assign(ConcurVector v) {
+	public synchronized  void assign(ConcurVector v) {
 		for (int i = 0; i < dimension(); ++i)
 			set(i, v.get(i));
 	}
@@ -79,7 +80,7 @@ public class ConcurVector extends Thread{
 	 * @param mask, a vector of conditions that indicate whether an element has to be copied or not.
 	 * @param v, a vector from which values are to be copied.
 	 * @precondition dimension() == mask.dimension() && dimension() == v.dimension(). */
-	public void assign(ConcurVector mask, ConcurVector v) {
+	public synchronized  void assign(ConcurVector mask, ConcurVector v) {
 		for (int i = 0; i < dimension(); ++i)
 			if (mask.get(i) >= 0)
 				set(i, v.get(i));
@@ -87,24 +88,31 @@ public class ConcurVector extends Thread{
 	
 	
 	/** Applies the absolute value operation to every element in this vector. */
-	public void abs() {
+	public synchronized  void absOriginal() {
 		for (int i = 0; i < dimension(); ++i)
 			set(i, Math.abs(get(i)));
 	}
 	
-	public synchronized void abs2() {
-
-		for (int i = 0; i < dimension(); ++i) {
-			final int j = i;
-			new Thread(){
-				public void run(){
-					set(j, Math.abs(get(j)));
-				}
-			}.start();
+	public synchronized void abs() throws InterruptedException {
+		this.recorrido= this.dimension();
+		for (int i = 0; i < dimension(); ++i){
+			CreadorThreads threads= new CreadorThreads(this, i);
+			threads.start();		
 		}
-		
+		while (recorrido>0){
+			this.wait();
+		}
 	}
-		
+	
+	public synchronized  void abs2(int posicion) {
+			set(posicion, Math.abs(get(posicion)));
+			this.recorrido--;
+			this.notify();
+	}
+	
+	public void actualizar(){
+		this.recorrido--;
+	}
 		
 	
 	

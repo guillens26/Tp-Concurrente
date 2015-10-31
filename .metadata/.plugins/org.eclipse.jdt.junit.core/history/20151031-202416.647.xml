@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="ConcurVectorTest" project="ConcurVectorTP" tests="17" started="17" failures="0" errors="0" ignored="0">
+  <testsuite name="test.ConcurVectorTest" time="0.041">
+    <testcase name="sumOfTheVectorTest" classname="test.ConcurVectorTest" time="0.007"/>
+    <testcase name="subTest" classname="test.ConcurVectorTest" time="0.001"/>
+    <testcase name="getAndSetTest" classname="test.ConcurVectorTest" time="0.001"/>
+    <testcase name="minChangeTest" classname="test.ConcurVectorTest" time="0.001"/>
+    <testcase name="normalizeTest" classname="test.ConcurVectorTest" time="0.001"/>
+    <testcase name="absTest" classname="test.ConcurVectorTest" time="0.015"/>
+    <testcase name="addTest" classname="test.ConcurVectorTest" time="0.001"/>
+    <testcase name="prodTest" classname="test.ConcurVectorTest" time="0.001"/>
+    <testcase name="assignAnotherVectorTest" classname="test.ConcurVectorTest" time="0.001"/>
+    <testcase name="assignMaskChangeTest" classname="test.ConcurVectorTest" time="0.001"/>
+    <testcase name="setInPositionTest" classname="test.ConcurVectorTest" time="0.001"/>
+    <testcase name="dimensionConcurVectorTest" classname="test.ConcurVectorTest" time="0.0"/>
+    <testcase name="maxChangeTest" classname="test.ConcurVectorTest" time="0.0"/>
+    <testcase name="mulTest" classname="test.ConcurVectorTest" time="0.001"/>
+    <testcase name="normTest" classname="test.ConcurVectorTest" time="0.003"/>
+    <testcase name="assignMaskNotChangeTest" classname="test.ConcurVectorTest" time="0.003"/>
+    <testcase name="divTest" classname="test.ConcurVectorTest" time="0.002"/>
+  </testsuite>
+</testrun>

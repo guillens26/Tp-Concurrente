@@ -1,0 +1,15 @@
+package model;
+
+public class CreadorThreads extends Thread{
+		ConcurVector vector;
+		
+	public CreadorThreads (ConcurVector vector){
+				this.vector= vector;
+			}
+
+	public void run(){
+		for (int i = 0; i < this.vector.dimension(); ++i){
+			this.vector.abs2(i);
+		}
+	}
+}

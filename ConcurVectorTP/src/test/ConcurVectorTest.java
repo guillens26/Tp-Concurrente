@@ -81,18 +81,18 @@ public class ConcurVectorTest {
 	}
 	
 	
-	@Test
-	public void absTest() {
-		maskConcurVector.abs();
-		double expected = 1; // El abs de -1.
-		double actual = maskConcurVector.get(1);
-		assertEquals(expected, actual, DELTA);
-
-	}
+//	@Test
+//	public void absTest() {
+//		maskConcurVector.abs();
+//		double expected = 1; // El abs de -1.
+//		double actual = maskConcurVector.get(1);
+//		assertEquals(expected, actual, DELTA);
+//
+//	}
 	
 	@Test
-	public void abs2Test() throws InterruptedException {
-		maskConcurVector.abs2();
+	public void absTest() throws InterruptedException {
+		maskConcurVector.abs();
 		double expected = 1; // El abs de -1.
 		double actual = maskConcurVector.get(1);
 		assertEquals(expected, actual, DELTA);

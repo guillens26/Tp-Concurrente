@@ -1,0 +1,15 @@
+package model;
+
+public class CreadorThreads extends Thread{
+		ConcurVector vector;
+		int posicion;
+		
+		public CreadorThreads (ConcurVector vector, int numero){
+			this.vector= vector;
+			this.posicion=numero;
+		}
+		public void run(){
+		this.vector.abs2(this.posicion);
+	}
+}
+
