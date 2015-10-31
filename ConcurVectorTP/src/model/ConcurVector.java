@@ -2,24 +2,41 @@ package model;
 
 
 /** This class represents a fixed width vector of floating point numbers. */
-public class ConcurVector {
+public class ConcurVector extends Thread{
 
 	
 	// An array with the vector elements
 	private double[] elements;
+	private int threads;
+	private int load;
 	
 	
 	/** Constructor for a ConcurVector.
 	 * @param size, the width of the vector.
 	 * @precondition size > 0. */
-	public ConcurVector(int size) {
+	public ConcurVector(int size, int nThreads, int nDifElemnts) {
 		elements = new double[size];
+		threads = nThreads;
+		load = nDifElemnts;
 	}
 	
 	
 	/** Returns the dimension of this vector, that is, its width. */
 	public int dimension() {
 		return elements.length;
+	}
+	
+	public int getThreads(){
+		return threads;
+	}
+	
+	public int getLoad() {
+		return load;
+	}
+
+
+	public void setLoad(int difElemnts) {
+		this.load = difElemnts;
 	}
 	
 	
@@ -75,6 +92,21 @@ public class ConcurVector {
 			set(i, Math.abs(get(i)));
 	}
 	
+	public synchronized void abs2() {
+
+		for (int i = 0; i < dimension(); ++i) {
+			final int j = i;
+			new Thread(){
+				public void run(){
+					set(j, Math.abs(get(j)));
+				}
+			}.start();
+		}
+		
+	}
+		
+		
+	
 	
 	/** Adds the elements of this vector with the values of another (element-wise).
 	 * @param v, a vector from which to get the second operands.
@@ -125,7 +157,7 @@ public class ConcurVector {
 	 * @param v, second operand of the dot product operation.
 	 * @precondition dimension() == v.dimension(). */
 	public double prod(ConcurVector v) {
-		ConcurVector aux = new ConcurVector(dimension());
+		ConcurVector aux = new ConcurVector(dimension(),2,2);
 		aux.assign(this);
 		aux.mul(v);
 		return aux.sum();
@@ -134,7 +166,7 @@ public class ConcurVector {
 	
 	/** Returns the norm of this vector. */
 	public double norm() {
-		ConcurVector aux = new ConcurVector(dimension());
+		ConcurVector aux = new ConcurVector(dimension(),2,2);
 		aux.assign(this);
 		aux.mul(this);
 		return Math.sqrt(aux.sum());
@@ -143,7 +175,7 @@ public class ConcurVector {
 	
 	/** Normalizes this vector, converting it into a unit vector. */
 	public void normalize() {
-		ConcurVector aux = new ConcurVector(dimension());
+		ConcurVector aux = new ConcurVector(dimension(),2,2);
 		aux.set(this.norm());
 		div(aux);
 	}
@@ -165,6 +197,6 @@ public class ConcurVector {
 		for (int i = 0; i < dimension(); ++i)
 			set(i, Math.min(get(i), v.get(i)));
 	}
-	
+
 	
 }

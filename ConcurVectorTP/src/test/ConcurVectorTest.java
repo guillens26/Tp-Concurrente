@@ -17,17 +17,17 @@ public class ConcurVectorTest {
 	
 	@Before
 	public void setUp() {
-		concurVector = new ConcurVector(2);
+		concurVector = new ConcurVector(2,2,1);
 		
-		anotherConcurVector = new ConcurVector(2);
+		anotherConcurVector = new ConcurVector(2,2,1);
 		anotherConcurVector.set(0,1);
 		anotherConcurVector.set(1,2);
 		
-		maskConcurVector = new ConcurVector(2);
+		maskConcurVector = new ConcurVector(2,2,1);
 		maskConcurVector.set(0, 1);
 		maskConcurVector.set(1,-1);
 		
-		anotherConcurVector2 = new ConcurVector(2);
+		anotherConcurVector2 = new ConcurVector(2,2,1);
 		anotherConcurVector2.set(0,3);
 		anotherConcurVector2.set(1,0);
 	}
@@ -84,6 +84,15 @@ public class ConcurVectorTest {
 	@Test
 	public void absTest() {
 		maskConcurVector.abs();
+		double expected = 1; // El abs de -1.
+		double actual = maskConcurVector.get(1);
+		assertEquals(expected, actual, DELTA);
+
+	}
+	
+	@Test
+	public void abs2Test() throws InterruptedException {
+		maskConcurVector.abs2();
 		double expected = 1; // El abs de -1.
 		double actual = maskConcurVector.get(1);
 		assertEquals(expected, actual, DELTA);
