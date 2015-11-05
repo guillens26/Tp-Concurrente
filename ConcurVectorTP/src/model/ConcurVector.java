@@ -9,8 +9,10 @@ public class ConcurVector extends Thread{
 	private double[] elements;
 	private int threads;
 	private int load;
-	private int recorrido;
 	private int dimension;
+	private CreadorThreads threadsActivos[];
+	public int cantFinalizados= 0;
+	public int posicionSiguiente= 0;
 	
 	/** Constructor for a ConcurVector.
 	 * @param size, the width of the vector.
@@ -94,27 +96,27 @@ public class ConcurVector extends Thread{
 	}
 	
 	public synchronized void abs() throws InterruptedException {
-		this.recorrido= this.dimension();
-		for (int i = 0; i < dimension(); ++i){
-			CreadorThreads threads= new CreadorThreads(this, i);
-			threads.start();		
+		// Primero Creo las instancias de los threads
+		// le paso el load para saber cuantas posiciones COMO MAXIMO, puedo recorrer
+		
+		for (int i=0; i<this.threads; i++){
+			this.threadsActivos[i]= new ThreadAbs(this, this.load);
 		}
-		while (recorrido>0){
+		
+		while (this.threadsActivos.length < this.threads){
 			this.wait();
 		}
-	}
-	
-	public synchronized  void abs2(int posicion) {
-			set(posicion, Math.abs(get(posicion)));
-			this.recorrido--;
-			this.notify();
-	}
-	
-	public void actualizar(){
-		this.recorrido--;
-	}
 		
-	
+		//Los inicios y espero hasta cantFinalizasos = dimension de vector
+		// Es decir que se analicen todas las celdas.
+		for (int i = 0; i < dimension(); ++i){
+			this.threadsActivos[i].start();		
+		}
+		
+		while (this.cantFinalizados != this.dimension){
+			this.wait();
+		}
+	}	
 	
 	/** Adds the elements of this vector with the values of another (element-wise).
 	 * @param v, a vector from which to get the second operands.

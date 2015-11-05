@@ -94,7 +94,7 @@ public class ConcurVectorTest {
 	public void absTest() throws InterruptedException {
 		maskConcurVector.abs();
 		double expected = 1; // El abs de -1.
-		double actual = maskConcurVector.get(1);
+		double actual = maskConcurVector.get(2);
 		assertEquals(expected, actual, DELTA);
 
 	}

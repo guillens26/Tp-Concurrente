@@ -1,15 +1,15 @@
 package model;
 
-public class CreadorThreads extends Thread{
+import java.util.ArrayList;
+
+public abstract class CreadorThreads extends Thread{
 		ConcurVector vector;
-		int posicion;
+		int maxPosiciones;
 		
-		public CreadorThreads (ConcurVector vector, int numero){
+		public CreadorThreads (ConcurVector vector, int cantidad){
+			this.maxPosiciones= cantidad;
 			this.vector= vector;
-			this.posicion=numero;
 		}
-		public void run(){
-		this.vector.abs2(this.posicion);
-	}
+		abstract public void run();
 }
 
