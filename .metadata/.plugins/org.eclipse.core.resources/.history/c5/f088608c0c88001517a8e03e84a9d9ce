@@ -1,0 +1,11 @@
+package model;
+
+public class Worker {
+	Acum bag;
+	
+	public Worker(Acum acum){
+		this.bag= acum;
+	}
+	
+	
+}

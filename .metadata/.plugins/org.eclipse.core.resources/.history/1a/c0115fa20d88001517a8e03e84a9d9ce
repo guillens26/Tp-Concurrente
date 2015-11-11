@@ -1,0 +1,42 @@
+package model;
+
+import java.util.ArrayList;
+
+// ACUMULADOR DE TRABAJO
+// TODOS LOS WORKERS LE PIDEN UN WORK A ESTA CLASE
+
+public class Acum {
+private ArrayList<Work> works;
+	
+
+	public Acum(){
+		this.works = new ArrayList<Work>();
+	}
+	
+	public Boolean isEmpty() {
+		return this.works.isEmpty();
+	}
+	
+	/**
+	 * Pushes a Range into the Buffer and notifies about the event.
+	 * @param range The range to be pushed.
+	 */
+	public synchronized void push(Range range) {
+		values.add(range);
+		notifyAll();
+	}
+	
+	/**
+	 * Returns the last Range that was pushed to the Buffer. If the Buffer is empty, the thread waits.
+	 * @return The last Range that was pushed to the Buffer.
+	 * @throws InterruptedException
+	 */
+	public synchronized Range pop() throws InterruptedException {
+		while(values.isEmpty())
+			wait();
+		Range result = this.values.get(this.values.size() - 1);
+		this.values.remove(this.values.size() - 1);
+		notifyAll();
+		return result;
+	}
+}

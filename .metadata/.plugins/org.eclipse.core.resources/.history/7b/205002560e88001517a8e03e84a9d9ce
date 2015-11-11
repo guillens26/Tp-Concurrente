@@ -1,0 +1,19 @@
+package model;
+
+public class Admin {
+private Integer num;
+	
+	public Admin(int n) {
+		this.num = n;
+	}
+	
+	public synchronized void decrease() {
+		this.num--;
+		notifyAll();
+	}
+	
+	public synchronized void waiting() throws InterruptedException {
+		while(num > 0)
+			wait();
+	}
+}

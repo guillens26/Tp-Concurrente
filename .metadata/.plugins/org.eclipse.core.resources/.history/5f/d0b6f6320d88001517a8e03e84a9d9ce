@@ -1,0 +1,11 @@
+package model;
+
+public class Worker {
+	Acum bag; // Bolsa de works para ir agarrando y analizando.
+	
+	public Worker(Acum acum){
+		this.bag= acum;
+	}
+	
+	
+}
