@@ -1,5 +1,6 @@
 package model;
 
+import model.Work.Operation;
 
 /** This class represents a fixed width vector of floating point numbers. */
 public class ConcurVector extends Thread{
@@ -10,6 +11,8 @@ public class ConcurVector extends Thread{
 	private int threads;
 	private int load;
 	private int dimension;
+	private Acum bag = new Acum();
+	private Worker worker = new Worker(bag);
 	
 	/** Constructor for a ConcurVector.
 	 * @param size, the width of the vector.
@@ -20,6 +23,14 @@ public class ConcurVector extends Thread{
 		load = nDifElemnts;
 	}
 	
+	public double[] getElements() {
+		return elements;
+	}
+
+
+	public void setElements(double[] elements) {
+		this.elements = elements;
+	}
 	
 	/** Returns the dimension of this vector, that is, its width. */
 	public synchronized  int dimension() {
@@ -79,7 +90,7 @@ public class ConcurVector extends Thread{
 	 * @param mask, a vector of conditions that indicate whether an element has to be copied or not.
 	 * @param v, a vector from which values are to be copied.
 	 * @precondition dimension() == mask.dimension() && dimension() == v.dimension(). */
-	public synchronized  void assign(ConcurVector mask, ConcurVector v) {
+	public synchronized void assign(ConcurVector mask, ConcurVector v) {
 		for (int i = 0; i < dimension(); ++i)
 			if (mask.get(i) >= 0)
 				set(i, v.get(i));
@@ -87,34 +98,27 @@ public class ConcurVector extends Thread{
 	
 	
 	/** Applies the absolute value operation to every element in this vector. */
-	public synchronized  void absOriginal() {
-		for (int i = 0; i < dimension(); ++i)
-			set(i, Math.abs(get(i)));
+	public synchronized void absOriginal() {
+		for (int i = 0; i < dimension(); ++i){
+			set(i, Math.abs(get(i)));}
 	}
 	
 	public synchronized void abs() throws InterruptedException {
-		// Primero Creo las instancias de los threads
-		// le paso el load para saber cuantas posiciones COMO MAXIMO, puedo recorrer
-		
-		for (int i=0; i<this.threads; i++){
-			this.threadsActivos[i]= new ThreadAbs(this, this.load);
-		}
-		
-		//Los inicios y espero hasta cantFinalizasos = dimension de vector
-		// Es decir que se analicen todas las celdas.
-		for (int i = 0; i < dimension(); ++i){
-			this.threadsActivos[i].start();		
-		}
-		
-		while (this.cantFinalizados != this.dimension){
-			this.wait();
-		}
+		Work w = new Work(Operation.ABS,this,null,null,0);
+		this.worker.addWork(w);
+		Vector v = new Vector(this);
+
+		v.initilizeWorker(this.worker.bag);
+
+
+
+
 	}	
 	
 	/** Adds the elements of this vector with the values of another (element-wise).
 	 * @param v, a vector from which to get the second operands.
 	 * @precondition dimension() == v.dimension(). */
-	public void add(ConcurVector v) {
+	public synchronized void add(ConcurVector v) {
 		for (int i = 0; i < dimension(); ++i)
 			set(i, get(i) + v.get(i));
 	}

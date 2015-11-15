@@ -14,7 +14,7 @@ private Integer num;
 	}
 	
 	public synchronized void waiting() throws InterruptedException {
-		while(num > 0)
+		while(num == 0)
 			wait();
 	}
 }

@@ -17,13 +17,14 @@ private ArrayList<Work> works;
 	}
 	
 	public synchronized void addWork(Work w) {
-		works.add(w);
-		notifyAll();
+		this.works.add(w);
+		notify();
 	}
 		
 	public synchronized Work getWork() throws InterruptedException {
-		while(works.isEmpty())
+		while(this.works.isEmpty()){
 			wait();
+		}
 		Work w = this.works.get(this.works.size() - 1);
 		this.works.remove(this.works.size() - 1);
 		notifyAll();
