@@ -12,15 +12,21 @@ public class ConcurVector extends Thread{
 	private int load;
 	private int dimension;
 	private Acum bag = new Acum();
-	private Worker worker = new Worker(bag);
+	private Admin admin;
+	private Vector vector;
 	
 	/** Constructor for a ConcurVector.
 	 * @param size, the width of the vector.
+	 * @throws InterruptedException 
 	 * @precondition size > 0. */
-	public ConcurVector(int size, int nThreads, int nDifElemnts) {
+	public ConcurVector(int size, int nThreads, int nDifElemnts) throws InterruptedException {
 		elements = new double[size];
 		threads = nThreads;
 		load = nDifElemnts;
+		admin= new Admin(size);
+		this.vector= new Vector(nThreads, this.bag);
+		this.vector.initilizeWorker();
+		
 	}
 	
 	public double[] getElements() {
@@ -97,22 +103,21 @@ public class ConcurVector extends Thread{
 	}
 	
 	
-	/** Applies the absolute value operation to every element in this vector. */
-	public synchronized void absOriginal() {
+	/** Applies the absolute value operation to every element in this vector. 
+	 * @throws InterruptedException */
+	public synchronized void absOriginal() throws InterruptedException {
 		for (int i = 0; i < dimension(); ++i){
-			set(i, Math.abs(get(i)));}
+			set(i, Math.abs(get(i)));
+			this.admin.update();
+		}	
 	}
 	
 	public synchronized void abs() throws InterruptedException {
+		System.out.print("entro al ABS\n");
 		Work w = new Work(Operation.ABS,this,null,null,0);
-		this.worker.addWork(w);
-		Vector v = new Vector(this);
-
-		v.initilizeWorker(this.worker.bag);
-
-
-
-
+		this.bag.addWork(w);
+		System.out.print("agregue trabajo\n");
+		this.admin.waiting();
 	}	
 	
 	/** Adds the elements of this vector with the values of another (element-wise).
@@ -151,19 +156,23 @@ public class ConcurVector extends Thread{
 	}
 	
 	
-	/** Returns the sum of all the elements in this vector. */
-	public double sum() {
+	/** Returns the sum of all the elements in this vector. 
+	 * @throws InterruptedException */
+	public double sum(){
 		double result = 0;
-		for (int i = 0; i < dimension(); ++i)
+		for (int i = 0; i < dimension(); ++i){
 			result += get(i);
+		}
 		return result;
+		
 	}
 	
 	
 	/** Returns the dot product between two vectors (this and v).
 	 * @param v, second operand of the dot product operation.
+	 * @throws InterruptedException 
 	 * @precondition dimension() == v.dimension(). */
-	public double prod(ConcurVector v) {
+	public double prod(ConcurVector v) throws InterruptedException {
 		ConcurVector aux = new ConcurVector(dimension(),2,2);
 		aux.assign(this);
 		aux.mul(v);
@@ -171,8 +180,9 @@ public class ConcurVector extends Thread{
 	}
 	
 	
-	/** Returns the norm of this vector. */
-	public double norm() {
+	/** Returns the norm of this vector. 
+	 * @throws InterruptedException */
+	public double norm() throws InterruptedException {
 		ConcurVector aux = new ConcurVector(dimension(),2,2);
 		aux.assign(this);
 		aux.mul(this);
@@ -180,8 +190,9 @@ public class ConcurVector extends Thread{
 	}
 	
 	
-	/** Normalizes this vector, converting it into a unit vector. */
-	public void normalize() {
+	/** Normalizes this vector, converting it into a unit vector. 
+	 * @throws InterruptedException */
+	public void normalize() throws InterruptedException {
 		ConcurVector aux = new ConcurVector(dimension(),2,2);
 		aux.set(this.norm());
 		div(aux);

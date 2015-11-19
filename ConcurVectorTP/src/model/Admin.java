@@ -10,11 +10,12 @@ private Integer num;
 	
 	public synchronized void update() {
 		this.num--;
-		notifyAll();
+		notify();
 	}
 	
 	public synchronized void waiting() throws InterruptedException {
-		while(num == 0)
+		while(num != 0){
 			wait();
+		}
 	}
 }

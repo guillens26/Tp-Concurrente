@@ -16,7 +16,7 @@ public class ConcurVectorTest {
 	private ConcurVector maskConcurVector;
 	
 	@Before
-	public void setUp() {
+	public void setUp() throws InterruptedException {
 		concurVector = new ConcurVector(2,2,1);
 		
 		anotherConcurVector = new ConcurVector(2,2,1);

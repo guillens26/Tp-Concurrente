@@ -12,25 +12,23 @@ public class Worker extends Thread{
 	
 	public Worker(Acum acum){
 		this.bag= acum;
+	}
 
-	}
-	
-	public void addWork(Work w){
-		this.bag.addWork(w);
-	}
-	
 	@Override
-	public void run(){
-		//??? 
-	}
-	
-	public void work() throws InterruptedException{
+	public synchronized void run(){
 		while (true){
-			Work w = this.bag.getWork();
-			w.realizarOperation();
-			
+			System.out.print("entro a en el while true del RUN de WORKER\n");
+			Work w;
+			try {
+				w = this.bag.getWork();
+				System.out.print("obtuve el work\n");
+				w.realizarOperation();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
+	
 	
 	
 }

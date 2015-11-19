@@ -40,7 +40,7 @@ public class Work {
 		switch(this.op){
 		case ABS:
 			this.vector.absOriginal();
-			break;
+		
 		case ADD:
 			this.vector.add(vector2);
 			break;
